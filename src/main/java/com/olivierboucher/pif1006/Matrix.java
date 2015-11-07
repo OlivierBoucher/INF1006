@@ -6,7 +6,7 @@ package com.olivierboucher.pif1006;
 public class Matrix {
 
 
-    double[][] matrix;
+    private double[][] matrix;
 
     public Matrix(double[][] matrix) throws MatrixException {
         this.matrix = matrix;
@@ -14,19 +14,18 @@ public class Matrix {
         for (int i = 0; i < matrix.length; i++) {
             if (i < matrix.length - 1) {
                 if (matrix[i].length != matrix[i + 1].length) {
-                    //TODO(Olivier): Wrong array passed
                     throw new MatrixException("Invalid array dimensions for a matrix");
                 }
             }
         }
     }
 
-    public int[] getSize() {
-        if(matrix.length == 1) {
-            return new int[]{matrix.length};
-        }
+    public int getNumRows() {
+        return matrix.length;
+    }
 
-        return new int[]{matrix.length, matrix[1].length};
+    public int getNumColumns() {
+        return matrix[0].length;
     }
 
     public Matrix(int size) {
@@ -125,7 +124,7 @@ public class Matrix {
 
     public double getDeterminant() throws MatrixException {
         if (!this.isSquared())
-            throw new MatrixException("matrix need to be square.");
+            throw new MatrixException("Matrix need to be square.");
         if (this.matrix.length == 1) {
             return this.getElement(0, 0);
         }
@@ -140,24 +139,23 @@ public class Matrix {
         return sum;
     }
 
-    public Matrix getSubmatrix(int line, int col) {
+    public Matrix getSubmatrix(int line, int col) throws MatrixException {
         try {
-            int[] size = getSize();
-            Matrix m = new Matrix(size[0]-1, size[1]-1);
+            Matrix m = new Matrix(getNumColumns() - 1, getNumColumns() - 1);
 
             int r = -1;
 
-            for(int i = 0; i < size[0]; i++) {
-                if (i == line)
+            for(int i = 0; i < getNumRows(); i++) {
+                if(i == line)
                     continue;
 
                 r++;
                 int c = -1;
 
-                for(int j =0; j < size[1]; j++) {
-                    if(j == col) {
+                for(int j =0; j < getNumColumns() ; j++) {
+                    if(j == col)
                         continue;
-                    }
+
                     m.setElement(r, ++c, getElement(i, j));
                 }
             }
@@ -165,7 +163,7 @@ public class Matrix {
             return m;
         }
         catch(IndexOutOfBoundsException e) {
-            return null;
+            throw new MatrixException("Invalid line or column parameter");
         }
     }
 

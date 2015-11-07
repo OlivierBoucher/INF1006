@@ -15,12 +15,10 @@ public class Main {
                 {3, 4},
                 {5, 6},
                 {7, 8}};
-        Matrix m = null;
+        Matrix m;
         try {
             m = new Matrix(innnerM);
-            Matrix multiplyMatrix = new Matrix(multiplyM);
-            m = m.matrixMultiplication(multiplyMatrix);
-            System.out.print(m.toString());
+            System.out.print(m.getDeterminant());
         } catch (Matrix.MatrixException e) {
             System.out.println(e.getMessage());
         }

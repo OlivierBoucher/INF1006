@@ -4,3 +4,6 @@ out
 .build
 build
 *.iml
+gradle
+*.bat
+gradlew

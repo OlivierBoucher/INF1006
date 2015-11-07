@@ -73,21 +73,21 @@ public class Matrix {
             }
             return newMatrix;
         } catch (Exception e) {
-           return null;
+            return null;
         }
     }
 
     public Matrix scalarProduct(double scalar) {
         double[][] innerMatrix = this.matrix;
-        for(int i = 0; i < innerMatrix.length; i++) {
-            for(int j = 0; j < innerMatrix[i].length; j++) {
+        for (int i = 0; i < innerMatrix.length; i++) {
+            for (int j = 0; j < innerMatrix[i].length; j++) {
                 innerMatrix[i][j] = innerMatrix[i][j] * scalar;
             }
         }
         try {
             return new Matrix(innerMatrix);
         } catch (MatrixException e) {
-           return null;
+            return null;
         }
     }
 
@@ -107,11 +107,11 @@ public class Matrix {
     }
 
     public double getTrace() throws MatrixException {
-        if(this.isSquared()) {
+        if (this.isSquared()) {
             double trace = 0;
-            for(int i = 0; i < this.matrix.length; i++) {
-                for(int j = 0; j < this.matrix[i].length; j++) {
-                    if(i == j) {
+            for (int i = 0; i < this.matrix.length; i++) {
+                for (int j = 0; j < this.matrix[i].length; j++) {
+                    if (i == j) {
                         trace += this.matrix[i][j];
                     }
                 }
@@ -129,7 +129,7 @@ public class Matrix {
             return this.getElement(0, 0);
         }
         if (matrix.length == 2) {
-            return (this.getElement(0, 0) * this.getElement(1, 1)) - ( this.getElement(0, 1) * this.getElement(1, 0));
+            return (this.getElement(0, 0) * this.getElement(1, 1)) - (this.getElement(0, 1) * this.getElement(1, 0));
         }
         double sum = 0.0;
         for (int i = 0; i < matrix.length; i++) {
@@ -145,15 +145,15 @@ public class Matrix {
 
             int r = -1;
 
-            for(int i = 0; i < getNumRows(); i++) {
-                if(i == line)
+            for (int i = 0; i < getNumRows(); i++) {
+                if (i == line)
                     continue;
 
                 r++;
                 int c = -1;
 
-                for(int j =0; j < getNumColumns() ; j++) {
-                    if(j == col)
+                for (int j = 0; j < getNumColumns(); j++) {
+                    if (j == col)
                         continue;
 
                     m.setElement(r, ++c, getElement(i, j));
@@ -161,34 +161,149 @@ public class Matrix {
             }
 
             return m;
-        }
-        catch(IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException e) {
             throw new MatrixException("Invalid line or column parameter");
         }
     }
 
     public Matrix getTransposed() {
-        return null;
+        Matrix transposedMatrix = new Matrix(getNumColumns(), getNumRows());
+        for (int i = 0; i < getNumRows(); i++) {
+            for (int j = 0; j < getNumColumns(); j++) {
+                transposedMatrix.setElement(j, i, this.getElement(i, j));
+            }
+        }
+        return transposedMatrix;
     }
 
-    public Matrix getCoMatrix() {
-        return null;
+    public Matrix getCoMatrix() throws MatrixException {
+        if (!isSquared()) {
+            return null;
+        }
+        Matrix m = new Matrix(getNumRows(), getNumColumns());
+        for (int i = 0; i < getNumRows(); i++) {
+            for (int j = 0; j < getNumColumns(); j++) {
+                Matrix subMatrix = createSmallMatrix(this, i, j);
+                m.setElement(i, j, changeSign(i) * changeSign(j) * subMatrix.getDeterminant());
+            }
+        }
+
+        return m;
     }
 
-    public Matrix getInversed() {
-        return null;
+    //Creates a matrix from the current matrix while excluding 1 row and 1 column
+    private Matrix createSmallMatrix(Matrix matrix, int excludingRow, int excludingCol) {
+        Matrix smallMatrix = new Matrix(matrix.getNumRows() - 1, matrix.getNumColumns() - 1);
+        int rowNumber = -1;
+        for (int i = 0; i < matrix.getNumRows(); i++) {
+            if (i == excludingRow)
+                continue;
+            rowNumber++;
+            int columnNumber = -1;
+            for (int j = 0; j < matrix.getNumColumns(); j++) {
+                if (j == excludingCol)
+                    continue;
+                smallMatrix.setElement(rowNumber, ++columnNumber, matrix.getElement(i, j));
+            }
+        }
+        return smallMatrix;
     }
+
+    private int changeSign(int number) {
+        return number % 2 == 0 ? 1 : -1;
+    }
+
+    public Matrix getInversed() throws MatrixException {
+        if (!isSquared() || !isRegular()) {
+            return null;
+        }
+        if (isTriangular(TriangleType.ANY, false)) {
+            Matrix matrix = new Matrix(getNumRows(), getNumColumns());
+            for (int i = 0; i < getNumRows(); i++) {
+                for (int j = 0; j < getNumColumns(); j++) {
+                    if (i == j) {
+                        matrix.setElement(i, j, 1 / this.getElement(i, j));
+                    } else {
+                        matrix.setElement(i, j, 0);
+                    }
+                }
+            }
+            return matrix;
+        }
+        Matrix m = getCoMatrix();
+        m = m.getTransposed().scalarProduct(1 / getDeterminant());
+        return m;
+    }
+
+    public enum TriangleType {INFERIOR, SUPERIOR, ANY}
 
     public Boolean isSquared() {
         return matrix.length == 1 || matrix.length == matrix[1].length;
     }
 
-    public Boolean isTriangular() {
-        return false;
+    public Boolean isTriangular(TriangleType type, Boolean isStrict) throws MatrixException {
+        switch (type) {
+            case INFERIOR:
+                return isStrict ? isTriangularStrict(type) : isTriangularInferior();
+            case SUPERIOR:
+                return isStrict ? isTriangularStrict(type) : isTriangularSuperior();
+            case ANY:
+                return isTriangularSuperior() || isTriangularInferior();
+        }
+        throw new MatrixException("Invalid matrix");
     }
 
-    public Boolean isRegular() {
-        return false;
+    private Boolean isTriangularInferior() {
+        for (int i = 0; i < getNumRows(); i++) {
+            for (int j = 0; j < getNumColumns(); j++) {
+                if (i < j && getElement(i, j) != 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private Boolean isTriangularSuperior() {
+        for (int i = 0; i < getNumRows(); i++) {
+            for (int j = 0; j < getNumColumns(); j++) {
+                if (i > j && getElement(i, j) != 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private Boolean isTriangularStrict(TriangleType type) {
+        if (type == TriangleType.SUPERIOR) {
+            for (int i = 0; i < getNumRows(); i++) {
+                for (int j = 0; j < getNumColumns(); j++) {
+                    if (i >= j && getElement(i, j) != 0) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        } else {
+            for (int i = 0; i < getNumRows(); i++) {
+                for (int j = 0; j < getNumColumns(); j++) {
+                    if (i <= j && getElement(i, j) != 0) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+    }
+
+    public Boolean isRegular() throws MatrixException {
+        try {
+            getDeterminant();
+            return true;
+        } catch (MatrixException e) {
+            return false;
+        }
     }
 
     @Override

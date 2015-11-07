@@ -55,7 +55,7 @@ public class Matrix {
 
     public double[] getColumn(int column) {
         double[] returnColumn = new double[matrix.length];
-        for (int i = 0; i< matrix.length;i++){
+        for (int i = 0; i < matrix.length; i++) {
             returnColumn[i] = matrix[column][i];
         }
         return returnColumn;
@@ -65,7 +65,7 @@ public class Matrix {
         if (this.getLine(0).length != matrix.getLine(0).length || this.getColumn(0).length != matrix.getColumn(0).length) {
             throw new MatrixException("Matrix must be of the same size");
         }
-        try{
+        try {
             Matrix newMatrix = new Matrix(new double[this.matrix.length][this.getLine(0).length]);
             for (int i = 0; i < this.matrix.length; i++) {
                 for (int j = 0; j < this.matrix[0].length; j++) {
@@ -73,8 +73,7 @@ public class Matrix {
                 }
             }
             return newMatrix;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
            return null;
         }
     }
@@ -93,8 +92,19 @@ public class Matrix {
         }
     }
 
-    public Matrix matrixMultiplication(Matrix matrix) {
-        return null;
+    public Matrix matrixMultiplication(Matrix matrix) throws MatrixException {
+        if (this.getLine(0).length != matrix.getMatrix().length) {
+            return null;
+        }
+        Matrix newMatrix = new Matrix(new double[this.getMatrix().length][matrix.getMatrix()[0].length]);
+        for (int i = 0; i < this.matrix.length; i++) {
+            for (int j = 0; j < matrix.getMatrix()[0].length; j++) {
+                for (int k = 0; k < this.matrix[0].length; k++) {
+                    newMatrix.setElement(i, j, newMatrix.getElement(i, j) + this.getElement(i, k) * matrix.getElement(k, j));
+                }
+            }
+        }
+        return newMatrix;
     }
 
     public double getTrace() throws MatrixException {

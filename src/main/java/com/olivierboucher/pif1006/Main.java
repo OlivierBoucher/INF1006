@@ -10,10 +10,16 @@ public class Main {
                 {0, 1, 2, 3},
                 {4, 5, 6, 7}
         };
+        double[][] multiplyM = {
+                {1, 2},
+                {3, 4},
+                {5, 6},
+                {7, 8}};
         Matrix m = null;
         try {
             m = new Matrix(innnerM);
-            m = m.add(m);
+            Matrix multiplyMatrix = new Matrix(multiplyM);
+            m = m.matrixMultiplication(multiplyMatrix);
             System.out.print(m.toString());
         } catch (Matrix.MatrixException e) {
             System.out.println(e.getMessage());

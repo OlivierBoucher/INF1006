@@ -13,6 +13,7 @@ public class Main {
         Matrix m = null;
         try {
             m = new Matrix(innnerM);
+            m = m.add(m);
             System.out.print(m.toString());
         } catch (Matrix.MatrixException e) {
             System.out.println(e.getMessage());

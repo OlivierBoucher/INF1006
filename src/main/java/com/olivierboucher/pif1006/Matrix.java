@@ -21,6 +21,22 @@ public class Matrix {
         }
     }
 
+    public int[] getSize() {
+        if(matrix.length == 1) {
+            return new int[]{matrix.length};
+        }
+
+        return new int[]{matrix.length, matrix[1].length};
+    }
+
+    public Matrix(int size) {
+        this.matrix = new double[size][size];
+    }
+
+    public Matrix(int line, int column) {
+        this.matrix = new double[line][column];
+    }
+
     public double[][] getMatrix() {
         return matrix;
     }
@@ -59,24 +75,88 @@ public class Matrix {
             return newMatrix;
         }
         catch (Exception e){
-            throw new MatrixException("test");
+           return null;
         }
     }
 
-    public Matrix scalarProduct(Matrix matrix) {
-        return null;
+    public Matrix scalarProduct(double scalar) {
+        double[][] innerMatrix = this.matrix;
+        for(int i = 0; i < innerMatrix.length; i++) {
+            for(int j = 0; j < innerMatrix[i].length; j++) {
+                innerMatrix[i][j] = innerMatrix[i][j] * scalar;
+            }
+        }
+        try {
+            return new Matrix(innerMatrix);
+        } catch (MatrixException e) {
+           return null;
+        }
     }
 
     public Matrix matrixMultiplication(Matrix matrix) {
         return null;
     }
 
-    public double getTrace() {
-        return 0;
+    public double getTrace() throws MatrixException {
+        if(this.isSquared()) {
+            double trace = 0;
+            for(int i = 0; i < this.matrix.length; i++) {
+                for(int j = 0; j < this.matrix[i].length; j++) {
+                    if(i == j) {
+                        trace += this.matrix[i][j];
+                    }
+                }
+            }
+            return trace;
+        }
+
+        throw new MatrixException("Matrix must be squared");
     }
 
-    public double getDeterminant() {
-        return 0;
+    public double getDeterminant() throws MatrixException {
+        if (!this.isSquared())
+            throw new MatrixException("matrix need to be square.");
+        if (this.matrix.length == 1) {
+            return this.getElement(0, 0);
+        }
+        if (matrix.length == 2) {
+            return (this.getElement(0, 0) * this.getElement(1, 1)) - ( this.getElement(0, 1) * this.getElement(1, 0));
+        }
+        double sum = 0.0;
+        for (int i = 0; i < matrix.length; i++) {
+            int sign = i % 2 == 0 ? 1 : -1;
+            sum += sign * this.getElement(0, i) * getSubmatrix(0, i).getDeterminant();
+        }
+        return sum;
+    }
+
+    public Matrix getSubmatrix(int line, int col) {
+        try {
+            int[] size = getSize();
+            Matrix m = new Matrix(size[0]-1, size[1]-1);
+
+            int r = -1;
+
+            for(int i = 0; i < size[0]; i++) {
+                if (i == line)
+                    continue;
+
+                r++;
+                int c = -1;
+
+                for(int j =0; j < size[1]; j++) {
+                    if(j == col) {
+                        continue;
+                    }
+                    m.setElement(r, ++c, getElement(i, j));
+                }
+            }
+
+            return m;
+        }
+        catch(IndexOutOfBoundsException e) {
+            return null;
+        }
     }
 
     public Matrix getTransposed() {
@@ -92,7 +172,7 @@ public class Matrix {
     }
 
     public Boolean isSquared() {
-        return false;
+        return matrix.length == 1 || matrix.length == matrix[1].length;
     }
 
     public Boolean isTriangular() {

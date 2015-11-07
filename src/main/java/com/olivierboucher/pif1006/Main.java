@@ -7,13 +7,14 @@ public class Main {
 
     public static void main(String[] args) {
         double[][] innnerM = {
-                {0, 1, 2, 3},
-                {4, 5, 6, 7}
+                {2, 3},
+                {2, 4}
         };
         Matrix m = null;
         try {
             m = new Matrix(innnerM);
             m = m.add(m);
+            System.out.println(m.getDeterminant());
             System.out.print(m.toString());
         } catch (Matrix.MatrixException e) {
             System.out.println(e.getMessage());

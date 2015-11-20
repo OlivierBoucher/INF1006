@@ -92,14 +92,18 @@ public class Matrix {
     }
 
     public Matrix matrixMultiplication(Matrix matrix) throws MatrixException {
-        if (this.getLine(0).length != matrix.getMatrix().length) {
+        if (this.getNumColumns() != matrix.getNumRows()) {
             return null;
         }
-        Matrix newMatrix = new Matrix(new double[this.getMatrix().length][matrix.getMatrix()[0].length]);
-        for (int i = 0; i < this.matrix.length; i++) {
-            for (int j = 0; j < matrix.getMatrix()[0].length; j++) {
-                for (int k = 0; k < this.matrix[0].length; k++) {
-                    newMatrix.setElement(i, j, newMatrix.getElement(i, j) + this.getElement(i, k) * matrix.getElement(k, j));
+        Matrix newMatrix = new Matrix(new double[this.getNumRows()][matrix.getNumColumns()]);
+
+        for (int i = 0; i < this.getNumRows(); i++) {
+
+            for (int j = 0; j < matrix.getNumColumns(); j++) {
+
+                for (int k = 0; k < this.getNumColumns(); k++) {
+
+                    newMatrix.setElement(i, j, newMatrix.getElement(i, j) + this.getElement(i, k) * matrix.getElement(i, j));
                 }
             }
         }

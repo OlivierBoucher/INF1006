@@ -69,22 +69,23 @@ public class MatrixTest {
     @Test
     public void testMatrixMultiplication() throws Exception {
         Matrix a = new Matrix(new double[][]{
-                {1, 2, 3},
-                {4, 5, 6},
-                {7, 8, 9}
+                {1,2,3},{3,2,1},{2,1,3}
         });
 
         Matrix b = new Matrix(new double[][]{
-                {1},
-                {1},
-                {1}
+                {4,5,6},{6,5,4},{4,6,5}
         });
 
         Matrix c = a.matrixMultiplication(b);
+        Matrix r = new Matrix(new double[][]{
+                {28, 33, 29}, {28, 31, 31}, {26, 33, 31}
+        });
 
-        assertEquals(6, c.getElement(0,0), 0);
-        assertEquals(15, c.getElement(1,0), 0);
-        assertEquals(24, c.getElement(2,0), 0);
+        for(int i = 0; i< c.getNumRows(); i++){
+            for(int j = 0; j< c.getNumColumns(); j++){
+                assertEquals(r.getElement(i,j), c.getElement(i, j), 0);
+            }
+        }
     }
 
     @Test
@@ -104,7 +105,24 @@ public class MatrixTest {
 
     @Test
     public void testGetTransposed() throws Exception {
+        Matrix a = new Matrix(new double[][]{
+                {1, 2, 3},
+                {3, 2, 1},
+                {2, 1, 3}
+        });
 
+        Matrix c = a.getTransposed();
+        Matrix r = new Matrix(new double[][]{
+                {1, 3, 2},
+                {2, 2, 1},
+                {3, 1, 3}
+        });
+
+        for(int i = 0; i< c.getNumRows(); i++){
+            for(int j = 0; j< c.getNumColumns(); j++){
+                assertEquals(r.getElement(i,j), c.getElement(i, j), 0);
+            }
+        }
     }
 
     @Test

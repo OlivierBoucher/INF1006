@@ -41,7 +41,7 @@ public class EQSystem {
             if (d == 0) throw new Matrix.MatrixException("Determinant cannot be equal to zero");
 
             int n = matA.getNumColumns();
-            Matrix m = new Matrix(1,n);
+            Matrix m = new Matrix(n,1);
             double tmp;
 
             for(int i = 0; i < n; i++){
@@ -50,8 +50,8 @@ public class EQSystem {
                     matB.setElement(j, 0, matA.getElement(j, i));
                     matA.setElement(j, i, tmp);
                 }
-                m.setElement(0, i, matA.getDeterminant());
-                for(int j =0 ; j < matA.getNumRows(); j++){
+                m.setElement(i, 0, matA.getDeterminant());
+                for(int j = 0 ; j < matA.getNumRows(); j++){
                     tmp = matB.getElement(j, 0);
                     matB.setElement(j, 0, matA.getElement(j, i));
                     matA.setElement(j, i, tmp);
@@ -72,10 +72,12 @@ public class EQSystem {
 
             if (d == 0) throw new Matrix.MatrixException("Determinant cannot be equal to zero");
 
-            int n = matA.getNumColumns();
-            Matrix m = matA.getCoMatrix().getTransposed().scalarProduct(1/d);
+            Matrix a = matA.getCoMatrix();
+            Matrix b = a.getTransposed();
+            Matrix c = b.scalarProduct(1/d);
+            Matrix r = c.matrixMultiplication(matB);
 
-            return m.matrixMultiplication(matB);
+            return r;
 
         } catch (Matrix.MatrixException e) {
             return null;

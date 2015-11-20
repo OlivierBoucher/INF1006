@@ -101,9 +101,9 @@ public class Matrix {
 
             for (int j = 0; j < matrix.getNumColumns(); j++) {
 
+                newMatrix.setElement(i, j, 0);
                 for (int k = 0; k < this.getNumColumns(); k++) {
-
-                    newMatrix.setElement(i, j, newMatrix.getElement(i, j) + this.getElement(i, k) * matrix.getElement(i, j));
+                    newMatrix.setElement(i, j, newMatrix.getElement(i, j) + this.getElement(i, k) * matrix.getElement(k, j));
                 }
             }
         }
@@ -187,7 +187,7 @@ public class Matrix {
         Matrix m = new Matrix(getNumRows(), getNumColumns());
         for (int i = 0; i < getNumRows(); i++) {
             for (int j = 0; j < getNumColumns(); j++) {
-                Matrix subMatrix = createSmallMatrix(this, i, j);
+                Matrix subMatrix = this.getSubmatrix(i,j);
                 m.setElement(i, j, changeSign(i) * changeSign(j) * subMatrix.getDeterminant());
             }
         }
@@ -195,23 +195,6 @@ public class Matrix {
         return m;
     }
 
-    //Creates a matrix from the current matrix while excluding 1 row and 1 column
-    private Matrix createSmallMatrix(Matrix matrix, int excludingRow, int excludingCol) {
-        Matrix smallMatrix = new Matrix(matrix.getNumRows() - 1, matrix.getNumColumns() - 1);
-        int rowNumber = -1;
-        for (int i = 0; i < matrix.getNumRows(); i++) {
-            if (i == excludingRow)
-                continue;
-            rowNumber++;
-            int columnNumber = -1;
-            for (int j = 0; j < matrix.getNumColumns(); j++) {
-                if (j == excludingCol)
-                    continue;
-                smallMatrix.setElement(rowNumber, ++columnNumber, matrix.getElement(i, j));
-            }
-        }
-        return smallMatrix;
-    }
 
     private int changeSign(int number) {
         return number % 2 == 0 ? 1 : -1;
@@ -314,25 +297,25 @@ public class Matrix {
     public String toString() {
 
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < matrix.length; i++) {
+        for (int i = 0; i < this.getNumRows(); i++) {
             if (i == 0) {
                 sb.append("{\n");
             }
-            for (int j = 0; j < matrix[i].length; j++) {
+            for (int j = 0; j < this.getNumColumns(); j++) {
                 if (j == 0) {
                     sb.append("\t[");
                 }
 
-                sb.append(matrix[i][j]);
+                sb.append(this.getElement(i, j));
 
-                if (j == matrix[i].length - 1) {
+                if (j == this.getNumColumns() - 1) {
                     sb.append("]");
                 } else {
                     sb.append(", ");
                 }
             }
 
-            if (i == matrix.length - 1) {
+            if (i == this.getNumRows() - 1) {
                 sb.append("\n}");
             } else {
                 sb.append(",\n");

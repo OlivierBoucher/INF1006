@@ -26,29 +26,26 @@ public class EQSystemTest {
         Matrix r = s.findXByCramer();
 
         assertEquals(1, r.getElement(0,0), 0);
-        assertEquals(-2, r.getElement(0,1), 0);
-        assertEquals(3, r.getElement(0,2), 0);
+        assertEquals(-2, r.getElement(1,0), 0);
+        assertEquals(3, r.getElement(2,0), 0);
     }
 
     @Test
     public void testFindXByMatricialInversion() throws Exception {
         Matrix matA = new Matrix(new double[][]{
-                {2, 1, 1},
-                {1, -1, -1},
-                {1, 2, 1}
+                {3, -2},
+                {-5, 4}
         });
         Matrix matB = new Matrix(new double[][]{
-                {3},
-                {0},
-                {0}
+                {6},
+                {8}
         });
 
         EQSystem s = new EQSystem(matA, matB);
         Matrix r = s.findXByMatricialInversion();
 
-        assertEquals(1, r.getElement(0,0), 0);
-        assertEquals(-2, r.getElement(0,1), 0);
-        assertEquals(3, r.getElement(0,2), 0);
+        assertEquals(20, r.getElement(0,0), 0);
+        assertEquals(27, r.getElement(1,0), 0);
     }
 
     @Test

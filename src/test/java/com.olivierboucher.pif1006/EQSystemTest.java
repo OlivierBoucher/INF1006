@@ -50,6 +50,23 @@ public class EQSystemTest {
 
     @Test
     public void testFindXByJacobi() throws Exception {
+        Matrix matA = new Matrix(new double[][]{
+                {5, -2, 3},
+                {-3, 9, 1},
+                {2, -1, -7}
+        });
+        Matrix matB = new Matrix(new double[][]{
+                {-1},
+                {2},
+                {3}
+        });
 
+        EQSystem s = new EQSystem(matA, matB);
+        Matrix r = s.findXByJacobi(1e-5);
+        Matrix x = s.findXByCramer();
+
+        assertEquals(x.getElement(0,0), r.getElement(0,0), 0.05);
+        assertEquals(x.getElement(1,0), r.getElement(1,0), 0.05);
+        assertEquals(x.getElement(2,0), r.getElement(2,0), 0.05);
     }
 }

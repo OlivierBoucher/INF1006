@@ -1,5 +1,7 @@
 package com.olivierboucher.pif1006;
 
+import java.util.Arrays;
+
 /**
  * Created by olivier on 2015-11-06.
  */
@@ -288,6 +290,24 @@ public class Matrix {
         try {
             getDeterminant();
             return true;
+        } catch (MatrixException e) {
+            return false;
+        }
+    }
+
+    public Boolean isDominant() {
+        try {
+            double diag = this.getTrace();
+
+            for(int i = 0; i < this.getNumRows(); i++){
+                double sum = 0;
+                for(int j = 0; j < this.getNumColumns(); j++){
+                    sum += this.getElement(i, j);
+                }
+                if (sum > diag) return false;
+            }
+            return true;
+
         } catch (MatrixException e) {
             return false;
         }

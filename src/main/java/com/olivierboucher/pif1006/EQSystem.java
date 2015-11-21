@@ -1,5 +1,7 @@
 package com.olivierboucher.pif1006;
 
+import java.util.Arrays;
+
 /**
  * Created by olivier on 2015-11-20.
  */
@@ -84,8 +86,38 @@ public class EQSystem {
         }
     }
 
-    public Matrix findXByJacobi() {
-        return null;
+    public Matrix findXByJacobi(double epsilon) {
+       if(matA.isDominant()) {
+           int n = matA.getNumRows();
+           Matrix approximations = new Matrix(n, 1);
+           Matrix previous = new Matrix(n, 1);
+
+           while (true) {
+               for (int i = 0; i < n; i++) {
+                   double sum = matB.getElement(i, 0);
+
+                   for (int j = 0; j < n; j++)
+                       if (j != i)
+                           sum -= matA.getElement(i, j) * previous.getElement(j, 0);
+
+                   approximations.setElement(i, 0, (1 / matA.getElement(i, i) * sum));
+               }
+
+               boolean stop = true;
+               for (int i = 0; i < n && stop; i++)
+                   if (Math.abs(approximations.getElement(i, 0) - previous.getElement(i, 0)) > epsilon)
+                       stop = false;
+
+               if (stop) break;
+               previous = approximations;
+           }
+
+           return approximations;
+       }
+       else {
+           System.out.println("Matrix must be dominant");
+           return null;
+       }
     }
 
     public static class SystemException extends Exception {

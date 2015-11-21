@@ -68,7 +68,11 @@ public class MatrixTest {
         Matrix r = new Matrix(new double[][]{
                 {2, 4, 6}, {6, 4, 2}, {4, 2, 6}
         });
-        assertEquals(r.getMatrix(), c.getMatrix());
+        for (int i = 0; i < c.getNumRows(); i++) {
+            for (int j = 0; j < c.getNumColumns(); j++) {
+                assertEquals(r.getElement(i, j), c.getElement(i, j), 0);
+            }
+        }
     }
 
     @Test
@@ -80,7 +84,11 @@ public class MatrixTest {
         Matrix r = new Matrix(new double[][]{
                 {3, 6, 9}, {9, 6, 3}, {6, 3, 9}
         });
-        assertEquals(r.getMatrix(), b.getMatrix());
+        for (int i = 0; i < b.getNumRows(); i++) {
+            for (int j = 0; j < b.getNumColumns(); j++) {
+                assertEquals(r.getElement(i, j), b.getElement(i, j), 0);
+            }
+        }
     }
 
     @Test
@@ -139,7 +147,11 @@ public class MatrixTest {
                 {1, 3},
                 {2, 3}
         });
-        assertEquals(c.getMatrix(), b.getMatrix());
+        for (int i = 0; i < c.getNumRows(); i++) {
+            for (int j = 0; j < c.getNumColumns(); j++) {
+                assertEquals(c.getElement(i, j), b.getElement(i, j), 0);
+            }
+        }
     }
 
     @Test
@@ -215,8 +227,7 @@ public class MatrixTest {
                 {1, -1, -1},
                 {1, 2, 1}
         });
-        Boolean expected = true;
-        assertEquals(expected, a.isSquared());
+        assertEquals(true, a.isSquared());
     }
 
     @Test
@@ -225,8 +236,7 @@ public class MatrixTest {
                 {2, 1, 1},
                 {1, -1, -1},
         });
-        Boolean expected = false;
-        assertEquals(expected, a.isSquared());
+        assertEquals(false, a.isSquared());
     }
 
     @Test
@@ -236,8 +246,7 @@ public class MatrixTest {
                 {1, -1, -1},
                 {1, 2, 1}
         });
-        Boolean expected = false;
-        assertEquals(expected, a.isTriangular(Matrix.TriangleType.ANY, false));
+        assertEquals(false, a.isTriangular(Matrix.TriangleType.ANY, false));
     }
 
     @Test
@@ -247,8 +256,7 @@ public class MatrixTest {
                 {1, 1, 0},
                 {1, 2, 1}
         });
-        Boolean expected = true;
-        assertEquals(expected, a.isTriangular(Matrix.TriangleType.ANY, false));
+        assertEquals(true, a.isTriangular(Matrix.TriangleType.ANY, false));
     }
 
     @Test
@@ -258,16 +266,14 @@ public class MatrixTest {
                 {1, 0, 0},
                 {1, 2, 0}
         });
-
-        Boolean expected = true;
-        assertEquals(expected, a.isTriangular(Matrix.TriangleType.ANY, true));
+        assertEquals(true, a.isTriangular(Matrix.TriangleType.ANY, true));
 
         Matrix b = new Matrix(new double[][]{
                 {0, 0, 0},
                 {0, 0, 0},
                 {0, 0, 0}
         });
-        assertEquals(expected, b.isTriangular(Matrix.TriangleType.INFERIOR, true));
+        assertEquals(true, b.isTriangular(Matrix.TriangleType.INFERIOR, true));
     }
 
     @Test
@@ -277,15 +283,13 @@ public class MatrixTest {
                 {3, 2, 1},
                 {2, 1, 3}
         });
-        Boolean expected = true;
-        assertEquals(expected, a.isRegular());
+        assertEquals(true, a.isRegular());
     }
 
     @Test
     public void testIsRegularShouldFail() throws Exception {
         Matrix a = new Matrix(new double[][]{{1, 0, 3}, {3, 0, 1}, {2, 0, 3}});
-        Boolean expected = false;
-        assertEquals(expected, a.isRegular());
+        assertEquals(false, a.isRegular());
     }
 
     @Test

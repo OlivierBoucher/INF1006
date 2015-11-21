@@ -288,8 +288,7 @@ public class Matrix {
 
     public Boolean isRegular() throws MatrixException {
         try {
-            getDeterminant();
-            return true;
+            return getDeterminant() != 0;
         } catch (MatrixException e) {
             return false;
         }

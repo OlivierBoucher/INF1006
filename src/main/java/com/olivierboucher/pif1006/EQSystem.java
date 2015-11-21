@@ -126,11 +126,13 @@ public class EQSystem {
 
         for(int i = 0; i < matA.getNumRows(); i++){
             for(int j = 0; j < matA.getNumColumns(); j++){
-                sb.append(matA.getElement(i, j));
+
+                sb.append( j == 0 ? matA.getElement(i, j) : Math.abs(matA.getElement(i, j)));
                 char var = (char)(97 + j);
                 sb.append(var);
                 if(j != matA.getNumColumns() - 1){
-                    sb.append(" + ");
+
+                    sb.append(matA.getElement(i, j+1) > 0 ? " + " : " - ");
                 }
             }
             sb.append(" = ");

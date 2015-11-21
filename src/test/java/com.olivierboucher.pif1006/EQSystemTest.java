@@ -23,7 +23,11 @@ public class EQSystemTest {
         });
 
         EQSystem s = new EQSystem(matA, matB);
+        System.out.println("\n====== NEW EQ SYSTEM ======");
+        System.out.println(s);
         Matrix r = s.findXByCramer();
+        System.out.println("====== SOLVED BY CRAMER ======");
+        System.out.println(r);
 
         assertEquals(1, r.getElement(0,0), 0);
         assertEquals(-2, r.getElement(1,0), 0);
@@ -42,7 +46,11 @@ public class EQSystemTest {
         });
 
         EQSystem s = new EQSystem(matA, matB);
+        System.out.println("\n====== NEW EQ SYSTEM ======");
+        System.out.println(s);
         Matrix r = s.findXByMatricialInversion();
+        System.out.println("====== SOLVED BY INVERSION ======");
+        System.out.println(r);
 
         assertEquals(20, r.getElement(0,0), 0);
         assertEquals(27, r.getElement(1,0), 0);
@@ -62,8 +70,14 @@ public class EQSystemTest {
         });
 
         EQSystem s = new EQSystem(matA, matB);
+        System.out.println("\n====== NEW EQ SYSTEM ======");
+        System.out.println(s);
         Matrix r = s.findXByJacobi(1e-5);
+        System.out.println("====== SOLVED BY JACOBI ======");
+        System.out.println(r);
         Matrix x = s.findXByCramer();
+        System.out.println("====== SOLVED BY CRAMER ======");
+        System.out.println(x);
 
         assertEquals(x.getElement(0,0), r.getElement(0,0), 0.05);
         assertEquals(x.getElement(1,0), r.getElement(1,0), 0.05);

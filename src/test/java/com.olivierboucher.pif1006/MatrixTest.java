@@ -11,51 +11,6 @@ import static org.junit.Assert.*;
  */
 public class MatrixTest {
 
-    @Before
-    public void setUp() throws Exception {
-
-    }
-
-    @After
-    public void tearDown() throws Exception {
-
-    }
-
-    @Test
-    public void testGetNumRows() throws Exception {
-
-    }
-
-    @Test
-    public void testGetNumColumns() throws Exception {
-
-    }
-
-    @Test
-    public void testGetMatrix() throws Exception {
-
-    }
-
-    @Test
-    public void testGetElement() throws Exception {
-
-    }
-
-    @Test
-    public void testSetElement() throws Exception {
-
-    }
-
-    @Test
-    public void testGetLine() throws Exception {
-
-    }
-
-    @Test
-    public void testGetColumn() throws Exception {
-
-    }
-
     @Test
     public void testAddShouldPass() throws Exception {
         Matrix a = new Matrix(new double[][]{
@@ -290,10 +245,5 @@ public class MatrixTest {
     public void testIsRegularShouldFail() throws Exception {
         Matrix a = new Matrix(new double[][]{{1, 0, 3}, {3, 0, 1}, {2, 0, 3}});
         assertEquals(false, a.isRegular());
-    }
-
-    @Test
-    public void testToString() throws Exception {
-
     }
 }

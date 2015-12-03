@@ -3,10 +3,26 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 
-sourceCompatibility = 1.5
+sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+}
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Devoir1 - PIF1006',
+                'Implementation-Version': version,
+                'Main-Class': 'com.olivierboucher.pif1006.Main'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+test {
+    onOutput { descriptor, event ->
+        logger.lifecycle(event.message)
+    }
 }
 
 dependencies {

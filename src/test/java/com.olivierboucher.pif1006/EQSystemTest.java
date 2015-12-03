@@ -12,14 +12,14 @@ public class EQSystemTest {
     @Test
     public void testFindXByCramer() throws Exception {
         Matrix matA = new Matrix(new double[][]{
-                {2, 1, 1},
-                {1, -1, -1},
-                {1, 2, 1}
+                {5, -2, 3},
+                {-3, 9, 1},
+                {2, -1, -7}
         });
         Matrix matB = new Matrix(new double[][]{
-                {3},
-                {0},
-                {0}
+                {-1},
+                {2},
+                {3}
         });
 
         EQSystem s = new EQSystem(matA, matB);
@@ -29,20 +29,22 @@ public class EQSystemTest {
         System.out.println("====== SOLVED BY CRAMER ======");
         System.out.println(r);
 
-        assertEquals(1, r.getElement(0,0), 0);
-        assertEquals(-2, r.getElement(1,0), 0);
-        assertEquals(3, r.getElement(2,0), 0);
+        assertEquals(59.0/317.0, r.getElement(0,0), 0.001);
+        assertEquals(105.07/317.0, r.getElement(1,0), 0.001);
+        assertEquals(-134.0/317.0, r.getElement(2,0), 0.001);
     }
 
     @Test
     public void testFindXByMatricialInversion() throws Exception {
         Matrix matA = new Matrix(new double[][]{
-                {3, -2},
-                {-5, 4}
+                {5, -2, 3},
+                {-3, 9, 1},
+                {2, -1, -7}
         });
         Matrix matB = new Matrix(new double[][]{
-                {6},
-                {8}
+                {-1},
+                {2},
+                {3}
         });
 
         EQSystem s = new EQSystem(matA, matB);
@@ -52,8 +54,9 @@ public class EQSystemTest {
         System.out.println("====== SOLVED BY INVERSION ======");
         System.out.println(r);
 
-        assertEquals(20, r.getElement(0,0), 0);
-        assertEquals(27, r.getElement(1,0), 0);
+        assertEquals(59.0/317.0, r.getElement(0,0), 0.001);
+        assertEquals(105.07/317.0, r.getElement(1,0), 0.001);
+        assertEquals(-134.0/317.0, r.getElement(2,0), 0.001);
     }
 
     @Test
@@ -82,5 +85,65 @@ public class EQSystemTest {
         assertEquals(x.getElement(0,0), r.getElement(0,0), 0.05);
         assertEquals(x.getElement(1,0), r.getElement(1,0), 0.05);
         assertEquals(x.getElement(2,0), r.getElement(2,0), 0.05);
+    }
+
+    @Test
+    public void testFindByJacobiShouldFail(){
+        try{
+
+            Matrix matA = new Matrix(new double[][]{
+                    {2, 4, 6},
+                    {4, 8, 12},
+                    {1, 2, 3}
+            });
+            Matrix matB = new Matrix(new double[][]{
+                    {5},
+                    {6},
+                    {3}
+            });
+            EQSystem s = new EQSystem(matA, matB);
+            System.out.println("\n====== NEW EQ SYSTEM ======");
+            System.out.println(s);
+            System.out.println("====== SOLVED BY JACOBI ======");
+            Matrix matR  = s.findXByJacobi(1e-5);
+            assertTrue(matR == null);
+        }
+        catch (Matrix.MatrixException e){
+            fail("Should be able to instantiate matrix correctly");
+
+        } catch (EQSystem.SystemException e) {
+           fail("Should be able to instantiate equation system correctly");
+        }
+
+    }
+
+    @Test
+    public void testFindByCramerShouldFail(){
+        try{
+
+            Matrix matA = new Matrix(new double[][]{
+                    {2, 4, 6},
+                    {4, 8, 12},
+                    {1, 2, 3}
+            });
+            Matrix matB = new Matrix(new double[][]{
+                    {5},
+                    {6},
+                    {3}
+            });
+            EQSystem s = new EQSystem(matA, matB);
+            System.out.println("\n====== NEW EQ SYSTEM ======");
+            System.out.println(s);
+            System.out.println("====== SOLVED BY CRAMER ======");
+            Matrix matR  = s.findXByCramer();
+            assertTrue(matR == null);
+        }
+        catch (Matrix.MatrixException e){
+            fail("Should be able to instantiate matrix correctly");
+
+        } catch (EQSystem.SystemException e) {
+            fail("Should be able to instantiate equation system correctly");
+        }
+
     }
 }

@@ -64,6 +64,7 @@ public class EQSystem {
             return m;
 
         } catch (Matrix.MatrixException e) {
+            System.out.println(e.getMessage());
             return null;
         }
     }
@@ -82,6 +83,7 @@ public class EQSystem {
             return r;
 
         } catch (Matrix.MatrixException e) {
+            System.out.println(e.getMessage());
             return null;
         }
     }
